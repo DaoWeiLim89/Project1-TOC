@@ -151,6 +151,7 @@ class HamiltonCycleAbstractClass(ABC):
                         path if path_exists else "None",
                         cycle if cycle_exists else "None",
                         largest_cycle_size,
+                        "Backtracking",
                         f"{bt_time:.6f}",
                     ]
                 )
