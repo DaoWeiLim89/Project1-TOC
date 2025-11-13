@@ -133,7 +133,100 @@ class HamiltonCycleColoring(HamiltonCycleAbstractClass):
     def hamilton_bruteforce(
         self, vertices: set, edges: List[Tuple[int]]
     ) -> Tuple[bool, List[int], bool, List[int], int]:
-        pass
+
+        vertices_list = list(vertices)
+        n = len(vertices_list)
+
+        # Build adjacency check
+        edge_set = set()
+        for u, v in edges:
+            edge_set.add((u, v))
+            edge_set.add((v, u))
+
+        def has_edge(u, v):
+            return (u, v) in edge_set
+
+        def is_valid_path(perm):
+            # Check if consecutive vertices in permutation have edges
+            for i in range(len(perm) - 1):
+                if not has_edge(perm[i], perm[i + 1]):
+                    return False
+            return True
+
+        def generate_permutations(arr):
+            # Generate all permutations of arr
+            result = []
+
+            def backtrack(current, remaining):
+                if not remaining:
+                    result.append(current[:])
+                    return
+
+                for i in range(len(remaining)):
+                    current.append(remaining[i])
+                    backtrack(current, remaining[:i] + remaining[i+1:])
+                    current.pop()
+
+            backtrack([], arr)
+            return result
+
+        def generate_subsets(arr):
+            # Generate all subsets of arr with size >= 3
+            result = []
+
+            def backtrack_subset(start, current):
+                if len(current) >= 3:
+                    result.append(current[:])
+
+                for i in range(start, len(arr)):
+                    current.append(arr[i])
+                    backtrack_subset(i + 1, current)
+                    current.pop()
+
+            backtrack_subset(0, [])
+            return result
+
+        hamiltonian_path = []
+        hamiltonian_cycle = []
+        largest_cycle_size = 0
+
+        # First, check for Hamiltonian path/cycle (full permutations)
+        all_perms = generate_permutations(vertices_list)
+        for perm in all_perms:
+            if is_valid_path(perm):
+                # Found a valid path
+                if not hamiltonian_path:
+                    hamiltonian_path = list(perm)
+
+                # Check if it forms a cycle
+                if len(perm) >= 3 and has_edge(perm[-1], perm[0]):
+                    cycle_size = len(perm)
+                    largest_cycle_size = max(largest_cycle_size, cycle_size)
+
+                    if cycle_size == n and not hamiltonian_cycle:
+                        hamiltonian_cycle = list(perm) + [perm[0]]
+
+        # check all subsets for largest cycle (if we haven't found a Hamiltonian cycle)
+        if largest_cycle_size < n:
+            all_subsets = generate_subsets(vertices_list)
+            for subset in all_subsets:
+                subset_perms = generate_permutations(subset)
+                for perm in subset_perms:
+                    if is_valid_path(perm) and has_edge(perm[-1], perm[0]):
+                        cycle_size = len(perm)
+                        largest_cycle_size = max(largest_cycle_size, cycle_size)
+
+        path_exists = len(hamiltonian_path) > 0
+        cycle_exists = len(hamiltonian_cycle) > 0
+
+        # Format output to match expected format
+        if not path_exists:
+            hamiltonian_path = None
+        if not cycle_exists:
+            hamiltonian_cycle = None
+            # Keep largest_cycle_size even if no Hamiltonian cycle
+
+        return [path_exists, hamiltonian_path, cycle_exists, hamiltonian_cycle, largest_cycle_size]
 
     def hamilton_simple(
         self, vertices: set, edges: List[Tuple[int]]

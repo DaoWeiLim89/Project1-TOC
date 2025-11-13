@@ -1,0 +1,4 @@
+Instance_ID,Num_Vertices,Num_Edges,Hamiltonian_Path,Hamiltonian_Cycle,Largest_Cycle_Size,Algorithm,Time
+1,6,10,"[1, 2, 5, 3, 4, 6]","[1, 2, 5, 3, 4, 6, 1]",6,BruteForce,0.000359
+2,6,8,"[1, 6, 3, 4, 2, 5]",None,4,BruteForce,0.001351
+3,6,8,"[2, 4, 6, 3, 1, 5]",None,5,BruteForce,0.001409
