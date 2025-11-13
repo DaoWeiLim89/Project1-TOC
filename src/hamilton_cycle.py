@@ -77,7 +77,6 @@ class HamiltonCycleColoring(HamiltonCycleAbstractClass):
         self, vertices: set, edges: List[Tuple[int]]
     ) -> Tuple[bool, List[int], bool, List[int], int]:        
         # return (path_exists, path, cycle_exists, cycle, largest)
-        # return (path_exists, path, cycle_exists, cycle, largest)
         Num_Vertices = len(vertices)
         Hamiltonian_Path = []
         Hamiltonian_Cycle = []
@@ -110,11 +109,8 @@ class HamiltonCycleColoring(HamiltonCycleAbstractClass):
                     visited.append(neighbor)
                     recurse(visited, neighbor)
                     visited.pop()
-
                     if Hamiltonian_Cycle != []:
                         return
-
-            return None
 
         def check_for_cycle(cur_node, start_node):
             """Check if current path forms a cycle back to start"""
