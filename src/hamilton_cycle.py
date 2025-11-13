@@ -77,7 +77,62 @@ class HamiltonCycleColoring(HamiltonCycleAbstractClass):
         self, vertices: set, edges: List[Tuple[int]]
     ) -> Tuple[bool, List[int], bool, List[int], int]:        
         # return (path_exists, path, cycle_exists, cycle, largest)
-        pass
+        # return (path_exists, path, cycle_exists, cycle, largest)
+        Num_Vertices = len(vertices)
+        Hamiltonian_Path = []
+        Hamiltonian_Cycle = []
+        Largest_Cycle_Size = 0
+
+        def recurse(visited: List, cur_node):
+            nonlocal Hamiltonian_Path, Hamiltonian_Cycle, Largest_Cycle_Size
+            # Need at least 3 vertices for a valid cycle
+            if len(visited) >= 3:
+                if check_for_cycle(cur_node, visited[0]):
+                    Largest_Cycle_Size = max(Largest_Cycle_Size, len(visited))
+                
+            # base case
+            if Num_Vertices == len(visited):
+                Hamiltonian_Path = visited[:]
+                if check_for_cycle(cur_node, visited[0]):
+                    Hamiltonian_Cycle = visited[:] + [visited[0]]
+                    Largest_Cycle_Size = len(visited)
+                return
+                
+            # Recurse
+            for edge in edges:
+                neighbor = None
+                if edge[1] == cur_node and edge[0] not in visited:
+                    neighbor = edge[0]
+                elif edge[0] == cur_node and edge[1] not in visited:
+                    neighbor = edge[1]
+                
+                if neighbor is not None:
+                    visited.append(neighbor)
+                    recurse(visited, neighbor)
+                    visited.pop()
+
+                    if Hamiltonian_Cycle != []:
+                        return
+
+            return None
+
+        def check_for_cycle(cur_node, start_node):
+            """Check if current path forms a cycle back to start"""
+            # Check if there's an edge from current node back to start
+            has_edge_to_start = any(
+                (cur_node == e[0] and start_node == e[1]) or 
+                (cur_node == e[1] and start_node == e[0]) 
+                for e in edges
+            )
+
+            return has_edge_to_start
+        
+        for start in vertices:
+            recurse([start], start)
+            if Hamiltonian_Cycle != []:
+                break
+                
+        return [Hamiltonian_Path != [], Hamiltonian_Path, Hamiltonian_Cycle != [], Hamiltonian_Cycle, Largest_Cycle_Size]
 
     def hamilton_bruteforce(
         self, vertices: set, edges: List[Tuple[int]]
