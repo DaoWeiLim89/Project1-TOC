@@ -1,0 +1,1 @@
+{"Project Configuration": {"Selection": {"name": "hamiltonian", "value": "Hamiltonian Path/Cycle: Traveling Salesman Problems"}, "Sub Problem": [{"name": "brute_force", "value": "Brute Force"}, {"name": "btracking", "value": "Backtracking"}]}}
