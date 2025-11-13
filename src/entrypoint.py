@@ -4,7 +4,7 @@ from src.helpers.constants import CONFIGURATION_FILE_PATH, parse_config, INPUT_F
 from src.sat import SatSolver
 from src.bin_packing import BinPacking
 from src.graph_coloring import GraphColoring
-from src.hamilton_cycle import HamiltonCycleColoring
+from src.hamilton_cycle_Dunne322 import HamiltonCycleColoring
 from src.helpers.automation_helpers import brief_about_project
 
 def main():
